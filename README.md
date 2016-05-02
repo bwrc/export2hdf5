@@ -25,63 +25,102 @@ Using export2hdf5
 -----------------
 The `export2hdf5` utility requires a configuration file in json-format. The configuration file specifies the filenames of the data sources. It is assumed that each data source has one or more channels, corresponding to different time series. For biomedical data the time series are typically different biosignals, e.g., brain signals recorded from different scalp locations or different ECG leads.
 
-A sample configuration file is provided with export2hdf (`config_sample.json`). A short example with one three-channel recording is given below.
+A sample configuration file is provided with `export2hdf` (`config_sample.json`). A short example with one three-channel recording is given below.
 
 ```json
-{ "output" : {
-    "filename" : "/tmp/example.h5"
-},
-
-  "datasets" : [
-
-      { "filename" : "/path/to/the/recording.edf",
-        "data_type" : "edf",
-        "maps" : [
-            { "path" : "ECG/Faros",
-              "channels" : ["ECG_1", "ECG_2", "ECG_3"],
-              "shared_group" : 1,
-              "meta" : [
-		  {"channels" : ["*"],
-		   "info" : {"comment" : "default comment for all channels",
-			     "comment2" : "another default comment for all channels"}
-		  },
-		  {"channels" : ["ECG_1"], 
-                   "info" : {"comment" : "this is a comment for ECG1",
-			     "example" : "this is a second comment for ECG1"}
-		  },
-		  {"channels" : ["ECG_2"],
-		   "info" : {"example2" : "this is a comment for ECG2"}
-		  }
-              ]
+{
+   "output":{
+      "filename":"/tmp/example.h5"
+   },
+   "datasets":[
+      {
+         "filename":"/path/to/the/recording.edf",
+         "data_type":"edf",
+         "maps":[
+            {
+               "path":"ECG/Faros",
+               "channels":[
+                  "ECG_1",
+                  "ECG_2",
+                  "ECG_3"
+               ],
+               "shared_group":1,
+               "meta":[
+                  {
+                     "channels":[
+                        "*"
+                     ],
+                     "info":{
+                        "comment":"default comment for all channels",
+                        "comment2":"another default comment for all channels"
+                     }
+                  },
+                  {
+                     "channels":[
+                        "ECG_1"
+                     ],
+                     "info":{
+                        "comment":"this is a comment for channel ECG_1",
+                        "example":"this is a second comment for ECG_2"
+                     }
+                  },
+                  {
+                     "channels":[
+                        "ECG_2"
+                     ],
+                     "info":{
+                        "example2":"this is a comment for ECG2"
+                     }
+                  }
+               ]
             }
-        ]
+         ]
       }
-]
+   ]
 }
 ```
 
-In this example, *output* specifies the name of the HDF5 that is to be created. It it exists it will be overwritten.
-Datasets are specified as elements in the 'datasets' list:
+In this example, `output` specifies the name of the HDF5 that is to be created. It it exists it will be overwritten.
 
-- filename : the filename of the data source
-- maps : defines the mappings, i.e., mapping of channels in the data source to resources in the HDF5 file
-- data_type : defines the type of data so that the correct import module can be used, see below for details on supported data formats
-- shared_group : Boolean defining whether or not all of the channels in the current should share the same time vector. The channels can share the same time vector if they are sampled simultaneously at the same rate.
-- meta : provide additional metadata.
+`Datasets` are specified as elements in the 'datasets' list:
 
+- `filename` : the filename of the data source
+- `data_type` : defines the type of data so that the correct import module can be used, see below for details on supported data formats
+- `maps` : defines the mappings, i.e., mapping of channels in the data source to resources in the HDF5 file. The `path` in the map gives the resource in the HDF5 file and the channels to be exported to this resource are given in the `channels` array. The wildcard `*` is supported and means all channels in the dataset, i.e., all channels in the file.
+- `shared_group` : Boolean defining whether or not all of the channels in the current should share the same time vector. The channels can share the same time vector if they are sampled simultaneously at the same rate.
+- `meta` : provide additional metadata. The metadata is given in structures containing information on which `channels` the metadata is relevant for. The wildcard `*` is supported and means all channels. The metadata (e.g., comments) are entered in the `info` section, in which different tags can be used (e.g., `comment` or `note`).
+
+Exporting multiple groups from the same file to different groups in the HDF5 file is accomplished by adding multiple maps to one dataset, each map having a different path and a different set of channels (the channel sets can be overlapping in HDF5 resources). For instance, the (partial) configuration
+
+```json
+{ "filename" : "/path/to/embla.edf",
+  "data_type" : "edf",
+  "maps" : [
+      { "path" : "EEG/Titanium",
+        "channels" : ["M1", "M2", "E1", "E2", "Fz", "C3", "C4", "Oz"],
+        "shared_group" : 1
+      },
+      { "path" : "EMG/Titanium",
+        "channels" :  ["ChinL", "ChinR"],
+        "shared_group" : 1
+      }
+  ]
+}
+```
+places the EEG channels in the HDF5 resource `EEG/Titanium` and the EMG channels in the resource `EMG/Titanium`.
 
 Supported data types
 --------------------
 `export2hdf5` currently supports the following data formats:
 
-- edf : data stored in the [European Data format](http://www.edfplus.info/)
-- mydarwin : data exported from the [MyDarwin](www.mydarwin.eu) analysis platform
-- empatica : data recorded using an [Empatica](https://www.empatica.com/) E4 device
-- bodyguard_ibi : interbeat interval (IBI) data exported form the [Firstbeat](https://www.firstbeat.com/) Bodyguard platform
-- bodyguard_acc : acceleration data exported form the FirstBeat Bodyguard platform
-- bodyguard_features : features exported from the FirstBeat Bodyguard platform
-- bodyguard_features_misc : more features exported from the FirstBeat Bodyguard platform
-- hypnogram : hypnogram data in the [RemLogic](http://www.natus.com/index.cfm?page=products_1&crid=1014) XML format
+- `edf` : data stored in the [European Data format](http://www.edfplus.info/)
+- `mydarwin` : data exported from the [MyDarwin](www.mydarwin.eu) analysis platform
+- `empatica` : data recorded using an [Empatica](https://www.empatica.com/) E4 device
+- `bodyguard_ibi` : interbeat interval (IBI) data exported form the [Firstbeat](https://www.firstbeat.com/) Bodyguard platform
+- `bodyguard_acc` : acceleration data exported form the FirstBeat Bodyguard platform
+- `bodyguard_features` : features exported from the FirstBeat Bodyguard platform
+- `bodyguard_features_misc` : more features exported from the FirstBeat Bodyguard platform
+- `hypnogram` : hypnogram data in the [RemLogic](http://www.natus.com/index.cfm?page=products_1&crid=1014) XML format
 
 
 Using export2hdf5
@@ -95,6 +134,7 @@ To fuse the data into an HDF5 file based on information in the configuration fil
 ```
 export2hdf5 --config <path to config file>
 ```
+This produces an HDF5 file in the location configured in the `output` section of the configuration file. All files are read from the locations specified in the locations specified in the `datasets` section in the configuration file.
 
 License
 -------
