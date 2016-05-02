@@ -1,0 +1,145 @@
+{ "output" : {
+    "filename" : "/tmp/example.h5"
+},
+
+  "datasets" : [
+
+      { "filename" : "/path/to/the/recording.edf",
+        "data_type" : "edf",
+        "maps" : [
+            { "path" : "ECG/Faros",
+              "channels" : ["ECG_1", "ECG_2", "ECG_3"],
+              "shared_group" : 1,
+              "meta" : [
+		  {"channels" : ["*"],
+		   "info" : {"comment" : "default comment for all channels",
+			     "comment2" : "another default comment for all channels"}
+		  },
+		  {"channels" : ["ECG_1"], 
+                   "info" : {"comment" : "this is a comment for ECG1",
+			     "example" : "this is a second comment for ECG1"}
+		  },
+		  {"channels" : ["ECG_2"],
+		   "info" : {"example2" : "this is a comment for ECG2"}
+		  }
+              ]
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/darwin_export.mat",
+        "data_type" : "mydarwin",
+        "maps" : [
+            { "path" : "IBI/Faros",
+              "channels" : ["*"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/embla.edf",
+        "data_type" : "edf",
+        "maps" : [
+            { "path" : "EEG/Titanium",
+              "channels" : ["M1", "M2", "E1", "E2", "Fz", "C3", "C4", "Oz"],
+              "shared_group" : 1
+            },
+            { "path" : "EMG/Titanium",
+              "channels" :  ["ChinL", "ChinR"],
+              "shared_group" : 1
+            },
+            { "path" : "Respiration/Titanium",
+              "channels" :  ["Thorax", "Abdomen"],
+              "shared_group" : 1
+            },
+            { "path" : "Position/Titanium",
+              "channels" :  ["Position"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/empatica/folder/",
+        "data_type" : "empatica",
+        "maps" : [
+            { "path" : "Acceleration/Empatica",
+              "channels" : ["acc_x", "acc_y", "acc_z"],
+              "shared_group" : 1
+            },
+            { "path" : "EDA/Empatica",
+              "channels" : ["EDA"],
+              "shared_group" : 1
+            },
+            { "path" : "HR/Empatica",
+              "channels" : ["HR"],
+              "shared_group" : 1
+            },
+            { "path" : "IBI/Empatica",
+              "channels" : ["IBI"],
+              "shared_group" : 1
+            },
+            { "path" : "temperature/Empatica",
+              "channels" : ["temperature"],
+              "shared_group" : 1
+            },
+            { "path" : "BVP/Empatica",
+              "channels" : ["BVP"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/exported_data.csv",
+        "data_type" : "bodyguard_acc",
+        "maps" : [
+            { "path" : "Acceleration/Firstbeat",
+              "channels" : ["*"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+
+      { "filename" : "/path/to/exported_data.csv",
+        "data_type" : "bodyguard_ibi",
+        "maps" : [
+            { "path" : "IBI/Firstbeat",
+              "channels" : ["*"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/example_data.csv",
+        "data_type" : "bodyguard_features",
+        "maps" : [
+            { "path" : "Features_1/Firstbeat",
+              "channels" : ["*"],
+              "shared_group" : 1
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/example_data.csv",
+        "data_type" : "bodyguard_features_misc",
+        "maps" : [
+            { "path" : "Features_2/Firstbeat",
+              "channels" : ["*"],
+              "shared_group" : 0
+            }
+        ]
+      },
+
+      { "filename" : "/path/to/hypnogram.xml",
+        "data_type" : "hypnogram",
+        "maps" : [
+            { "path" : "Hypnogram/",
+              "channels" : ["*"],
+              "shared_group" : 1
+            }
+        ]
+      }
+
+  ]
+
+}
