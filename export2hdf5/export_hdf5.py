@@ -30,6 +30,7 @@ from . import utilities_empatica as empaticautils
 from . import utilities_firstbeat as firstbeatutils
 from . import utilities_mydarwin as mydarwinutils
 from . import utilities_hypnogram as hypnoutils
+from . import utilities_shimmer as shimmerutils
 
 def export_hdf5(fname):
     """
@@ -50,7 +51,8 @@ def export_hdf5(fname):
                   "bodyguard_features_misc" : firstbeatutils.read_bodyguard_features_misc,
                   "bodyguard_ibi" : firstbeatutils.read_bodyguard_ibi,
                   "bodyguard_acc" : firstbeatutils.read_bodyguard_acc,
-                  "hypnogram" : hypnoutils.read_hypnogram}
+                  "hypnogram" : hypnoutils.read_hypnogram,
+                  "shimmer"   : shimmerutils.read_shimmer}
 
     config = load_json_file(fname)
     fname_out = config["output"]["filename"]

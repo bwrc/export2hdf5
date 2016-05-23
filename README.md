@@ -116,11 +116,13 @@ Supported data types
 - `edf` : data stored in the [European Data format](http://www.edfplus.info/)
 - `mydarwin` : data exported from the [MyDarwin](www.mydarwin.eu) analysis platform
 - `empatica` : data recorded using an [Empatica](https://www.empatica.com/) E4 device
+- `shimmer` : data recorded using a [Shimmer](https://www.shimmersensing.com/) device
 - `bodyguard_ibi` : interbeat interval (IBI) data exported form the [Firstbeat](https://www.firstbeat.com/) Bodyguard platform
 - `bodyguard_acc` : acceleration data exported form the FirstBeat Bodyguard platform
 - `bodyguard_features` : features exported from the FirstBeat Bodyguard platform
 - `bodyguard_features_misc` : more features exported from the FirstBeat Bodyguard platform
 - `hypnogram` : hypnogram data in the [RemLogic](http://www.natus.com/index.cfm?page=products_1&crid=1014) XML format
+
 
 
 Using export2hdf5

@@ -57,7 +57,7 @@ def read_empatica_ibi(fname, labels):
 
     return [{"data" : data, "meta" : meta}]
 
-def read_empatica_gen(fname, labels):
+def read_empatica_gen(fname, labels, scalefactor = 1.0):
     """
     General function for reading signal data from
     an Empatica csv file.
@@ -92,13 +92,13 @@ def read_empatica_gen(fname, labels):
 
     if len(labels) == 1:
         data = {}
-        data[labels[0]] = data_tmp
+        data[labels[0]] = data_tmp * scalefactor
         data["time"] = timevec
         out = [{"meta": meta, "data" : data}]
     else:
         for ind, lab in enumerate(labels):
             data = {}
-            data[lab] = data_tmp[:, ind]
+            data[lab] = data_tmp[:, ind] * scalefactor
             data["time"] = timevec
             out[ind] = {"meta": meta, "data" : data}
 
@@ -130,7 +130,7 @@ def read_empatica(folder):
         signal_type = f.split("/")[-1].replace(".csv", "")
 
         if signal_type == "ACC":
-            out += read_empatica_gen(f, labels=["acc_x", "acc_y", "acc_z"])
+            out += read_empatica_gen(f, labels=["acc_x", "acc_y", "acc_z"], scalefactor = 1.0/64.0)
         if signal_type == "BVP":
             out += read_empatica_gen(f, labels=["BVP"])
         if signal_type == "EDA":
