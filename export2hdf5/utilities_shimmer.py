@@ -68,8 +68,15 @@ def read_shimmer(fname):
     data_tmp = data_tmp[:, 1:]
     header = header[1:]
 
+    # Preallocate structure to return
+    out = [0] * len(header)
+
     # -- the signals
     for ind, label in enumerate(header):
+        data = {}
         data[label] = data_tmp[:, ind]
+        data["time"] = tvec
+        out[ind] = {"meta": meta, "data" : data}
 
-    return [{"data" : data, "meta" : meta}]
+    return out
+
