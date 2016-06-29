@@ -70,7 +70,11 @@ def read_shimmer(fname):
     # -- the signals
     for ind, label in enumerate(header):
         data = {}
-        data[label] = data_tmp[:, ind]
+        # Convert acceleration to units of g
+        if (re.search("Accel", label):
+            data[label] = (data_tmp[:, ind] / 9.80665)
+        else:
+            data[label] = data_tmp[:, ind]
         data["time"] = tvec
         out[ind] = {"meta": meta, "data" : data}
 

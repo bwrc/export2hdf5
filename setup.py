@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='export2hdf5',
-      version='1.0.4',
+      version='1.0.5',
       description='Export data from various formats into an HDF5 file.',
       author='Andreas Henelius, Finnish Institute of Occupational Health',
       author_email='andreas.henelius@ttl.fi',
