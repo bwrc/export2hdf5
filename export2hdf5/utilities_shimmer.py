@@ -71,7 +71,7 @@ def read_shimmer(fname):
     for ind, label in enumerate(header):
         data = {}
         # Convert acceleration to units of g
-        if (re.search("Accel", label):
+        if re.search("Accel", label):
             data[label] = (data_tmp[:, ind] / 9.80665)
         else:
             data[label] = data_tmp[:, ind]
