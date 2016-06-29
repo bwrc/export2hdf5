@@ -14,6 +14,7 @@
 http://www.shimmersensing.com/
 """
 
+import re
 import datetime
 import numpy as np
 
@@ -39,12 +40,7 @@ def read_shimmer(fname):
 
     # Get header and units
     header = [i.strip() for i in fid.readline().split(sep) if i.strip() != ""]
-    device_id = "_".join(header[0].split("_")[0:2])
-    header = [i.replace(device_id + "_", "") for i in header]
-    header = [i.replace("_CAL", "") for i in header]
-    header = [i.replace("_LN", "") for i in header]
-    header = [i.replace("_A13", "") for i in header]
-
+    header = fix_labels(header)
     # units = [i.strip() for i in fid.readline().split(sep) if i.strip() != ""]
 
     # Read the data
@@ -80,3 +76,41 @@ def read_shimmer(fname):
 
     return out
 
+
+def fix_labels(header):
+    """
+    Fix the labels from the Shimmer data by removing unnecessary
+    text.
+
+    Arguments:
+       - header : the channel names as a list
+
+    Returns:
+
+    A list with the channel names fixed.
+
+    """
+
+    for i, label in enumerate(header):
+        if re.search("Unix", label):
+            header[i] = "Timestamp"
+        if (re.search("Accel", label) and re.search("X", label)):
+            header[i] = "Accel_X"
+        if (re.search("Accel", label) and re.search("Y", label)):
+            header[i] = "Accel_Y"
+        if (re.search("Accel", label) and re.search("Z", label)):
+            header[i] = "Accel_Z"
+        if (re.search("Gyro", label) and re.search("X", label)):
+            header[i] = "Gyro_X"
+        if (re.search("Gyro", label) and re.search("Y", label)):
+            header[i] = "Gyro_Y"
+        if (re.search("Gyro", label) and re.search("Z", label)):
+            header[i] = "Gyro_Z"
+        if re.search("Pressure", label):
+            header[i] = "Pressure"
+        if re.search("Temp", label):
+            header[i] = "Temperature"
+        if re.search("GSR", label):
+            header[i] = "GSR"
+
+    return header
