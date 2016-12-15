@@ -23,7 +23,7 @@ def read_edf(fname):
 
 def get_channel_list(edf):
     """ Return a list containing the channel names in the EDF file. """
-    return [i.decode("ASCII") for i in edf.getSignalLabels()]
+    return edf.getSignalLabels()
 
 def get_signal_header(edf, i):
     """ Read the signal header of the i:th signal in the edf file."""
@@ -115,3 +115,29 @@ def read_edf_file(fname):
 
     return out
 
+def read_faros(fname):
+    """
+    Read all channels in the EDF file recorded using the Faros device 
+    and return the result as an array where where each element is a channel.
+    
+    This function automatically converts accelerometer values
+    from mG (milli G) to G.
+
+    Each channel is a dictionary:
+
+    {"meta" : <dict with metadata>,
+    "data" : {"time" : [...], "<channelname" : [...] }}
+
+    """
+    res = read_edf_file(fname)
+
+    # scale data from mG to G
+    for i in range(len(res)):
+        tmp = list(res[i]["data"].keys())
+        del tmp[tmp.index("time")]
+        channel = tmp[0]
+        if channel[:-2] == "Accelerometer":
+            print(channel)
+            res[i]["data"][channel] = res[i]["data"][channel] / 1000
+            
+    return res

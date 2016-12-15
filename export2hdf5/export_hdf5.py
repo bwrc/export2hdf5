@@ -29,7 +29,7 @@ from . import utilities_edf as edfutils
 from . import utilities_empatica as empaticautils
 from . import utilities_firstbeat as firstbeatutils
 from . import utilities_mydarwin as mydarwinutils
-from . import utilities_hypnogram as hypnoutils
+from . import utilities_psg as psgutils
 from . import utilities_shimmer as shimmerutils
 
 def export_hdf5(fname):
@@ -45,13 +45,16 @@ def export_hdf5(fname):
     """
     # Map for data reading functions
     readerlist = {"edf" : edfutils.read_edf_file,
-                  "mydarwin" : mydarwinutils.read_mydarwin_data,
+                  "faros" : edfutils.read_faros,
+                  "mydarwin_ibi" : mydarwinutils.read_mydarwin_data_ibi,
+                  "mydarwin_summary" : mydarwinutils.read_mydarwin_data_summary,
                   "empatica" : empaticautils.read_empatica,
                   "bodyguard_features" : firstbeatutils.read_bodyguard_features,
                   "bodyguard_features_misc" : firstbeatutils.read_bodyguard_features_misc,
                   "bodyguard_ibi" : firstbeatutils.read_bodyguard_ibi,
                   "bodyguard_acc" : firstbeatutils.read_bodyguard_acc,
-                  "hypnogram" : hypnoutils.read_hypnogram,
+                  "psg_hypnogram" : psgutils.read_hypnogram,
+                  "psg_arousal" : psgutils.read_arousal,
                   "shimmer"   : shimmerutils.read_shimmer}
 
     config = load_json_file(fname)

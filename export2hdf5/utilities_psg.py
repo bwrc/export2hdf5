@@ -18,15 +18,49 @@ from datetime import datetime
 import numpy as np
 
 def read_hypnogram(fname, events_accepted=["SLEEP-MT", "SLEEP-REM", "SLEEP-S0", "SLEEP-S1", "SLEEP-S2", "SLEEP-S3"]):
-    """Read the hypnogram from the XML-file with filename fname and
-       extract the events listed in the array events_accepted.
+    """Extract a hypnogram from the  XML-file with filename fname.
 
     Arguments:
        - fname : the filename of the XML-file with the hypnogram
        - events_accepted : array of strings with the hypnogram events that are to be exported
 
     Returns:
-        - The hypnogram as a dataset:
+        - The hypnogramas a dataset:
+
+    {"meta" : <dict with metadata>,
+    "data" : {"time" : [...], "<channelname" : [...] }}
+    """
+
+    res = read_psg_event(fname, events_accepted, check_consecutive=True)
+    return hypnogram_to_dataset(res)
+
+def read_arousal(fname, events_accepted=["AROUSAL"]):
+    """Extract polysomnography (PSG) events from the  XML-file with filename fname.
+
+    Arguments:
+       - fname : the filename of the XML-file with the hypnogram
+       - events_accepted : array of strings with the events that are to be exported
+
+    Returns:
+        - The events a dataset:
+
+    {"meta" : <dict with metadata>,
+    "data" : {"time" : [...], "<channelname" : [...] }}
+    """
+
+    res = read_psg_event(fname, events_accepted, check_consecutive=False)
+    return psg_event_to_dataset(res)
+
+def read_psg_event(fname, events_accepted, check_consecutive=False):
+    """Read and extract events listed in the array events_accepted from
+       the XML-file with filename fname.
+
+    Arguments:
+       - fname : the filename of the XML-file with the hypnogram
+       - events_accepted : array of strings with the hypnogram events that are to be exported
+
+    Returns:
+        - The events as a dataset:
 
     {"meta" : <dict with metadata>,
     "data" : {"time" : [...], "<channelname" : [...] }}
@@ -34,6 +68,7 @@ def read_hypnogram(fname, events_accepted=["SLEEP-MT", "SLEEP-REM", "SLEEP-S0", 
     The events are exported from the time interval defined by the
     first occurrence of the LIGHTS_OFF event to the last occurrence of
     the event LIGHTS_ON.
+
     """
 
     timeformat = "%Y-%m-%dT%H:%M:%S.%f"
@@ -57,7 +92,7 @@ def read_hypnogram(fname, events_accepted=["SLEEP-MT", "SLEEP-REM", "SLEEP-S0", 
         ## event duration in milliseconds
         t_start = datetime.strptime(ev_start, timeformat)
         t_stop = datetime.strptime(ev_stop, timeformat)
-        ev_duration = (t_stop - t_start).total_seconds() * 1000
+        ev_duration = (t_stop - t_start).total_seconds() 
 
         ## create output string
         out = "{0:s}" + "\t" + "{1:s}" + "\t" + "{2:s}" + "\t" + "{3:f}"
@@ -65,13 +100,13 @@ def read_hypnogram(fname, events_accepted=["SLEEP-MT", "SLEEP-REM", "SLEEP-S0", 
 
         ## store and/or print event
         if ev_type in events_accepted:
-            if previous_event_start is not None:
-                delta = (t_start - previous_event_start).total_seconds()
-                if delta != 30:
-                    print("Error!\n\nConsecutive accepted events not spaced 30s apart.")
-            previous_event_start = t_start
+            if check_consecutive:
+                if previous_event_start is not None:
+                    delta = (t_start - previous_event_start).total_seconds()
+                    if delta != 30:
+                        print("Error!\n\nConsecutive accepted events not spaced 30s apart.")
+                previous_event_start = t_start
 
-            ## print(out)
             vec_t_start += [t_start]
             vec_t_stop += [t_stop]
             vec_t_duration += [ev_duration]
@@ -83,8 +118,7 @@ def read_hypnogram(fname, events_accepted=["SLEEP-MT", "SLEEP-REM", "SLEEP-S0", 
            "event_type" : vec_t_type,
            "n_events" : len(vec_t_start)}
 
-    return hypnogram_to_dataset(res)
-
+    return res
 
 def firstindex(x, val):
     """ Find the first index of val in the vector x. """
@@ -133,5 +167,28 @@ def hypnogram_to_dataset(res):
 
     data["hypnogram"] = np.array([hyp_val[i] for i in res["event_type"][i_start:i_stop]])
     data["time"] = np.arange(0, 30*len(data["hypnogram"]), step=30)
+
+    return [{"meta" : meta, "data" : data}]
+
+
+def psg_event_to_dataset(res):
+    """Create a dataset from PSG events
+
+    A dataset is a list of dictionaries, each dictionary having the
+    format:
+
+    {"meta" : <dict with metadata>,
+    "data" : {"time" : [...], "<channelname" : [...] }}
+    """
+
+    meta = {}
+    data = {}
+
+    meta["time_start"] = res["t_start"][0]
+    meta["sampling_rate"] = 0
+
+    data["event"] = np.array([i for i in res["event_type"]])
+    data["time"] = np.array([(i - res["t_start"][0]).total_seconds() for i in res["t_start"]])
+    data["duration"] = res["duration"]
 
     return [{"meta" : meta, "data" : data}]
