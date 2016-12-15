@@ -33,7 +33,7 @@ def read_shimmer(fname):
     "data" : {"time" : [...], "<channelname" : [...] }}
 
     """
-    fid = open(fname, "r")
+    fid = open(fname, "r", encoding="utf-8")
 
     # Get the separator
     sep = fid.readline().split("=")[1].split('"')[0]

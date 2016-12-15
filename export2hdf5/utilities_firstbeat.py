@@ -38,7 +38,7 @@ def read_bodyguard_features_misc(fname, time_start=""):
 
     """
     ## Read header of misc vectors
-    tmp = open(fname, "r")
+    tmp = open(fname, "r", encoding="utf-8")
     for i, line in enumerate(tmp):
         if i == 3:
             labels = [x.strip().replace("Vector", "") for x in line.split(";")]
@@ -92,7 +92,7 @@ def read_bodyguard_features(fname):
     "data" : {"time" : [...], "<channelname" : [...] }}
 
     """
-    tmp = open(fname, "r")
+    tmp = open(fname, "r", encoding="utf-8")
 
     meta = {}
 
@@ -165,7 +165,7 @@ def read_bodyguard_acc(fname):
     meta = {}
 
     ## Read the header
-    tmp = open(fname, "r").readlines()
+    tmp = open(fname, "r", encoding="utf-8").readlines()
     header = tmp[0:5]
 
     meta["time_start"] = datetime.strptime(header[0].split(";")[1].strip(), timeformat)
@@ -213,7 +213,7 @@ def read_bodyguard_ibi(fname):
     """
 
     ## Read the header
-    header = open(fname, "r").readlines()
+    header = open(fname, "r", encoding="utf-8").readlines()
 
     timeformat = "%d.%m.%Y %H:%M:%S"
 

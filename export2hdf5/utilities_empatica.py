@@ -38,7 +38,7 @@ def read_empatica_ibi(fname, labels):
     "data" : {"time" : [...], "<channelname" : [...] }}
 
     """
-    header = open(fname, "r").readlines()
+    header = open(fname, "r", encoding="utf-8").readlines()
 
     meta = {}
     data = {}
@@ -75,7 +75,7 @@ def read_empatica_gen(fname, labels, scalefactor = 1.0):
     "data" : {"time" : [...], "<channelname" : [...] }}
 
     """
-    header = open(fname, "r").readlines()
+    header = open(fname, "r", encoding="utf-8").readlines()
 
     meta = {}
 
