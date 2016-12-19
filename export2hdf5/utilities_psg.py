@@ -111,7 +111,6 @@ def read_psg_event(fname, events_accepted, check_consecutive=False):
             vec_t_stop += [t_stop]
             vec_t_duration += [ev_duration]
             vec_t_type += [ev_type]
-
     res = {"t_start" : vec_t_start,
            "t_stop" : vec_t_stop,
            "duration" : vec_t_duration,
@@ -187,8 +186,8 @@ def psg_event_to_dataset(res):
     meta["time_start"] = res["t_start"][0]
     meta["sampling_rate"] = 0
 
-    data["event"] = np.array([i for i in res["event_type"]])
+    data["event"] = np.array(i for i in res["event_type"])
     data["time"] = np.array([(i - res["t_start"][0]).total_seconds() for i in res["t_start"]])
-    data["duration"] = res["duration"]
+    data["duration"] = np.array(res["duration"])
 
     return [{"meta" : meta, "data" : data}]
