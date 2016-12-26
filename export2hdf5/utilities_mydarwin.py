@@ -76,7 +76,6 @@ def read_mydarwin_data_summary(fname):
          is irregular.
     """
 
-
     data_tmp = np.genfromtxt(fname, delimiter=",", skip_header=0, names = True)
 
     labels = data_tmp.dtype.names
@@ -89,8 +88,8 @@ def read_mydarwin_data_summary(fname):
 
     timevec = data_tmp["start"]
 
-    out = [0] * len(labels)
-    
+    out = [0] * (len(labels) - len(skip_columns))
+
     i = 0
     for label in labels:
         if label not in skip_columns:
@@ -101,6 +100,5 @@ def read_mydarwin_data_summary(fname):
 
             out[i] = {"data" : data, "meta" : meta}
             i += 1
-
     return out
 

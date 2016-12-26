@@ -45,7 +45,7 @@ def export_hdf5(fname):
     """
     # Map for data reading functions
     readerlist = {"edf" : edfutils.read_edf_file,
-                  "faros" : edfutils.read_faros,
+                  "edf_faros" : edfutils.read_faros,
                   "mydarwin_ibi" : mydarwinutils.read_mydarwin_data_ibi,
                   "mydarwin_summary" : mydarwinutils.read_mydarwin_data_summary,
                   "empatica" : empaticautils.read_empatica,
@@ -98,7 +98,7 @@ def load_json_file(fname):
     out = None
     try:
         out = json.loads(open(fname, "r").read())
-    except json.decoder.JSONDecodeError as e:
+    except ValueError as e:
         print("\nError in JSON file!\nUnable to continue.")
         print("Error message below:\n")
         print("\t",e, "\n")

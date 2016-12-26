@@ -137,7 +137,6 @@ def read_faros(fname):
         del tmp[tmp.index("time")]
         channel = tmp[0]
         if channel[:-2] == "Accelerometer":
-            print(channel)
             res[i]["data"][channel] = res[i]["data"][channel] / 1000
             
     return res

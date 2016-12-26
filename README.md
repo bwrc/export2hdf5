@@ -114,7 +114,7 @@ Supported data types
 `export2hdf5` currently supports the following data formats:
 
 - `edf` : data stored in the [European Data format](http://www.edfplus.info/)
-- `faros` : data recoreded using the [Mega Electronics Ltd](http://www.megaemg.com) Faros device. The data is stored in the EDF. This function automatically converts accelerometer units to G from mG.
+- `edf_faros` : data recoreded using the [Mega Electronics Ltd](http://www.megaemg.com) Faros device. The data is stored in the EDF. This function automatically converts accelerometer units to G from mG.
 - `mydarwin_ibi` : IBI data exported from the [MyDarwin](www.mydarwin.eu) analysis platform
 - `mydarwin_summary` : Summary data exported from the [MyDarwin](www.mydarwin.eu) analysis platform
 - `empatica` : data recorded using an [Empatica](https://www.empatica.com/) E4 device

@@ -130,7 +130,7 @@ def read_empatica(folder):
         signal_type = f.split("/")[-1].replace(".csv", "")
 
         if signal_type == "ACC":
-            out += read_empatica_gen(f, labels=["acc_x", "acc_y", "acc_z"], scalefactor = 1.0/64.0)
+            out += read_empatica_gen(f, labels=["acc_x", "acc_y", "acc_z"], scalefactor = 1.0 / 64.0)
         if signal_type == "BVP":
             out += read_empatica_gen(f, labels=["BVP"])
         if signal_type == "EDA":

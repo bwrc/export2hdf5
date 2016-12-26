@@ -99,12 +99,12 @@ def add_data_h5(fid, path, dataset, channels, shared_group=True):
         grp = get_group(fid, path)
 
         ## add the metadata to the group
-        add_metadata(grp, dataset[0]["meta"])
-
+        metadata_added = False
+        
         ## shared group, so all data vectors in the group share the
         ## same time vector
         timevector_added = False
-
+        
         for i in dataset:
             channel = utils.get_channels_in_set(i)[0]
             path_tmp = path + "/" + channel
@@ -123,6 +123,9 @@ def add_data_h5(fid, path, dataset, channels, shared_group=True):
                                                 dtype="f",
                                                 data=i["data"]["time"])
                     timevector_added = True
+                if not metadata_added:
+                    add_metadata(grp, i["meta"])
+
     ## the group does not share the same time vector
     else:
         for i in dataset:
