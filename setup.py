@@ -15,6 +15,7 @@ setup(name='export2hdf5',
                         'pyedflib',
                         'numpy',
                         'scipy',
-                        'h5py'],
+                        'h5py',
+                        'construct>=2.8'],
       entry_points={"console_scripts":
                     ["export2hdf = export2hdf5.export_hdf5:export2hdf5_cli"]})
