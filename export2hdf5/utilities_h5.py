@@ -37,6 +37,7 @@ def get_group(fid, path):
     Get a handle to the group with the given path in the HDF5 file
     with handle fid, if the group exists, otherwise create it.
     """
+
     if path not in fid:
         grp = fid.create_group(path)
     else:
@@ -70,6 +71,45 @@ def add_metadata_h5(fid, path, meta, channels):
                 obj = get_group(fid, path_tmp)
                 obj.attrs[attr] = group["info"][attr]
 
+                
+def add_text_h5(fid, path, data):
+    """Add text data (UTF-8) to the given path in the HDF5 file
+       with handle fid.
+
+    Arguments:
+       - fid is the file handle to the HDF5 file
+
+       - path is the base path inside the HDF5 file
+
+       - data is the text data as a string
+    """
+
+    dset = fid.create_dataset(name=path,
+                              shape=(1,),
+                              dtype=h5py.special_dtype(vlen=str),
+                              data=data,
+                              compression="gzip")
+
+                
+def add_events_h5(fid, path, data, dtype):
+    """Add events  to the given path in the HDF5 file with handle fid.
+
+    Arguments:
+       - fid is the file handle to the HDF5 file
+
+       - path is the base path inside the HDF5 file
+
+       - dataset is a numpy structured array. The format of the events
+         varies depending on their origin.
+    """
+    dset = fid.create_dataset(name=path,
+                              shape=(len(data),),
+                              dtype=dtype,
+                              data=data,
+                              compression="gzip")
+
+    
+                
 def add_data_h5(fid, path, dataset, channels, shared_group=True):
     """Add the channels in the dataset to the given path in the
     HDF5 file with handle fid.
@@ -113,7 +153,8 @@ def add_data_h5(fid, path, dataset, channels, shared_group=True):
                 dset_d = fid.create_dataset(path_tmp,
                                             shape=i["data"][channel].shape,
                                             dtype="f",
-                                            data=i["data"][channel])
+                                            data=i["data"][channel],
+                                            compression="gzip")
 
                 add_metadata(dset_d, i["meta"])
 
@@ -121,7 +162,8 @@ def add_data_h5(fid, path, dataset, channels, shared_group=True):
                     dset_t = fid.create_dataset(path + "/time",
                                                 shape=i["data"]["time"].shape,
                                                 dtype="f",
-                                                data=i["data"]["time"])
+                                                data=i["data"]["time"],
+                                                compression="gzip")
                     timevector_added = True
                 if not metadata_added:
                     add_metadata(grp, i["meta"])
@@ -136,12 +178,14 @@ def add_data_h5(fid, path, dataset, channels, shared_group=True):
                 dset_d = fid.create_dataset(path_tmp + "/data",
                                             shape=i["data"][channel].shape,
                                             dtype="f",
-                                            data=i["data"][channel])
+                                            data=i["data"][channel],
+                                            compression="gzip")
 
                 dset_t = fid.create_dataset(path_tmp + "/time",
                                             shape=i["data"]["time"].shape,
                                             dtype="f",
-                                            data=i["data"]["time"])
+                                            data=i["data"]["time"],
+                                            compression="gzip")
 
                 add_metadata(dset_d, i["meta"])
 

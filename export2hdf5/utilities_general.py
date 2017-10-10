@@ -27,6 +27,7 @@ def get_channels_in_set(dataset):
     "data" : {"time" : [...], "<channelname" : [...] }}
 
     """
+
     if not isinstance(dataset, list):
         dataset = [dataset]
 
@@ -38,3 +39,22 @@ def get_channels_in_set(dataset):
     ind = channels.index("time")
     del channels[ind]
     return channels
+
+
+def read_text(fname):
+    """
+    Read text data from a file.
+
+    Arguments:
+       - fname : the name of the file containing the data
+
+    Returns:
+       - a dictionary with the data
+
+    {"text" : <the text data as a string> }
+
+    """
+
+    with open(fname, "r") as file:
+        data = file.read()
+    return {'text' : data}
