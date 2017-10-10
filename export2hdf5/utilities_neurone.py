@@ -85,8 +85,8 @@ def read_neurone_protocol(fpath):
     # Package the information
     # --------------------------------------------------
     meta = {}
-    meta["time_start"] = datetime.strptime(time_start[0:26], "%Y-%m-%dT%H:%M:%S.%f")
-    meta["time_stop"] = datetime.strptime(time_stop[0:26], "%Y-%m-%dT%H:%M:%S.%f")
+    meta["time_start"] = datetime.strptime(time_start[0:time_start.index('+')], "%Y-%m-%dT%H:%M:%S.%f")
+    meta["time_stop"] = datetime.strptime(time_stop[0:time_stop.index('+')], "%Y-%m-%dT%H:%M:%S.%f")
     meta["sampling_rate"] = sampling_rate
 
     return {'channels' : channel_names, 'meta' : meta}
