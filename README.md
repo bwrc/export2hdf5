@@ -1,12 +1,12 @@
-Overview
---------
+# Overview
+
 The `export2hdf5` programme is a utility for fusing multiple data sources into one HDF5 file. For instance, you might have simultaneously recorded physiological signals (e.g., multi-channel data) using several devices, each possibly having their own data format. To make the analysis of the combined data easier you can use `export2hdf5` to fuse all these recordings into one [HDF5](https://www.hdfgroup.org/) file.
 
 You can also add metadata for each channel and decide how channels in the original recording are mapped to paths in the HDF5 file.
 
 
-Installation
-------------
+# Installation
+
 Please note that `export2hdf5` requires [Python 3](https://www.python.org/).
 
 Using [PIP](https://github.com/pypa/pip) you can directly install the latest version of export2hdf as follows:
@@ -21,8 +21,8 @@ Please note that `export2hdf5` depends on (amongst other packages) [NumPy](http:
 `export2hdf5` is tested on GNU/Linux. On Linux you might have to use sudo for the installation.
 
 
-Using export2hdf5
------------------
+# Using export2hdf5
+
 The `export2hdf5` utility requires a configuration file in json-format. The configuration file specifies the filenames of the data sources. It is assumed that each data source has one or more channels, corresponding to different time series. For biomedical data the time series are typically different biosignals, e.g., brain signals recorded from different scalp locations or different ECG leads.
 
 A sample configuration file is provided with `export2hdf` (`config_sample.json`). A short example with one three-channel recording is given below.
@@ -109,8 +109,8 @@ Exporting multiple groups from the same file to different groups in the HDF5 fil
 ```
 places the EEG channels in the HDF5 resource `EEG/Titanium` and the EMG channels in the resource `EMG/Titanium`.
 
-Supported data types
---------------------
+# Supported data types
+
 `export2hdf5` currently supports the following data formats:
 
 - `edf` : data stored in the [European Data format](http://www.edfplus.info/)
@@ -128,8 +128,8 @@ Supported data types
 
 
 
-Using export2hdf5
------------------
+# Using export2hdf5
+
 To only validate that the given configuration file is OK:
 ```
 export2hdf5 --config <path to config file> --validate-only
@@ -141,6 +141,43 @@ export2hdf5 --config <path to config file>
 ```
 This produces an HDF5 file in the location configured in the `output` section of the configuration file. All files are read from the locations specified in the locations specified in the `datasets` section in the configuration file.
 
-License
--------
+
+# Reading exported data
+
+## R
+
+We recommend package `rhdf5` from http://bioconductor.org/packages/release/bioc/html/rhdf5.html. Follow the instructions behind the link to install the package.
+
+Usage example:
+```
+require(rhdf5)
+
+h5_file = 'full-filename-of-your-file'
+
+# list contents of file
+rhdf5::h5ls(h5_file)
+
+# read all EEG data
+h5data <- rhdf5::h5read(h5_file, '/EEG/Neurone')
+```
+
+## Matlab
+HDF5 files can be read using Matlab's built-in tools. Make sure your HDF5 -file ends in `.hdf5` as the file ending seems to matter.
+
+Usage example:
+```
+h5_file = 'full-filename-of-your-file'
+
+% list contents of file
+hi = h5info(h5_file)
+h5disp(h5_file)
+h5disp(h5_file, '/EEG/Neurone/T8')
+
+% read EEG data from one channel
+h5read(h5_file, '/EEG/Neurone/T8')
+```
+
+
+# License
+
 `export2hdf5` is licensed under the MIT license. Please see the file LICENSE for more details.
