@@ -7,19 +7,27 @@ You can also add metadata for each channel and decide how channels in the origin
 # Installation
 Please note that `export2hdf5` requires [Python 3](https://www.python.org/).
 
-Using [PIP](https://github.com/pypa/pip) you can directly install the latest version of export2hdf as follows:
+To install the latest version of `export2hdf5` into a [virtual environment](https://docs.python.org/3/library/venv.html) using [PIP](https://github.com/pypa/pip) proceed as follows:
 ```bash
-   pip3 install git+https://github.com/bwrc/export2hdf5
+virtualenv -p python3 hdf5example
+cd hdf5example
+source bin/activate
+pip3 install git+https://github.com/bwrc/export2hdf5
 ```
+
+After this you can use `export2hdf5` directly from the command line or import it into Python scripts (more detailed instructions below).
+
 Please note that `export2hdf5` depends on (amongst other packages) [NumPy](http://www.numpy.org/) and [SciPy](https://www.scipy.org/) and you might want to install these separately using, e.g., your operating system package manager. In this case, install `export2hdf5` without dependencies as follows:
+
 ```bash
    pip3 install --no-dependencies git+https://github.com/bwrc/export2hdf5
 ```
 
-`export2hdf5` is tested on GNU/Linux. On Linux you might have to use sudo for the installation.
+`export2hdf5` is tested on GNU/Linux. On Linux you might have to use `sudo` for the installation if you do not use a virtual environment or want to install the `export2hdf5` globally.
 
 
 # Using export2hdf5
+## The configuration file
 The `export2hdf5` utility requires a configuration file in json-format. The configuration file specifies the filenames of the data sources. It is assumed that each data source has one or more channels, corresponding to different time series. For biomedical data the time series are typically different biosignals, e.g., brain signals recorded from different scalp locations or different ECG leads. Events can be discrete and are stored as a compouned HDF5 dataset.
 
 A sample configuration file is provided with `export2hdf` (`config_sample.json`). A short example with one three-channel recording is given below.
@@ -135,6 +143,27 @@ Text notes can also be stored as follows.
 }
 ```
 
+## Using export2hdf5 from the command line
+The `export2hdf5` utility can be used directly from the command line.
+
+To get usage instructions:
+```
+export2hdf5 --help
+```
+
+To only validate that a given configuration file is OK:
+```
+export2hdf5 --config <path to config file> --validate-only
+```
+
+To fuse the data into an HDF5 file based on information in the configuration file:
+```
+export2hdf5 --config <path to config file>
+```
+
+This produces an HDF5 file in the location configured in the `output` section of the configuration file. All files are read from the locations specified in the locations specified in the `datasets` section in the configuration file.
+
+
 ## Using export2hdf5 as a module from Python
 The `export2hdf5` utility can also be used a module from Python, e.g., for automation of data export. Below is a brief example of how `export2hdf5` can be called from Python. Please note that `export2hdf5` requires [Python 3](https://www.python.org/).
 
@@ -175,17 +204,6 @@ export_hdf5.export_hdf5(config_file)
 - `actigraph` : data recorded using an [ActiGraph](http://actigraphcorp.com/products-showcase/activity-monitors/actigraph-link/) device. The data must be exported to CSV format. Both 3-axis accelerometer data sampled at 50 Hz and raw data (accelerometer, gyroscope, magnetometer, temperature) data sampled at 100 Hz is supported.
 - `text` : general text (UTF-8), e.g., notes.
 
-# Using export2hdf5
-To only validate that the given configuration file is OK:
-```
-export2hdf5 --config <path to config file> --validate-only
-```
-
-To fuse the data into an HDF5 file based on information in the configuration file:
-```
-export2hdf5 --config <path to config file>
-```
-This produces an HDF5 file in the location configured in the `output` section of the configuration file. All files are read from the locations specified in the locations specified in the `datasets` section in the configuration file.
 
 # Reading HDF5 -files in other programming languages
 ## Python
